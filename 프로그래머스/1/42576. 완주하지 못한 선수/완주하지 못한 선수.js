@@ -1,7 +1,7 @@
 function solution(participant, completion) {
     const pObj = {}
     for(const p of participant){
-        pObj[p] = pObj[p]!==undefined ? pObj[p]+1 : 0
+        pObj[p] = pObj[p] ? pObj[p]+1 : 1
     }
     
     for(const c of completion){
@@ -9,7 +9,7 @@ function solution(participant, completion) {
     }
     
     for(const [k,v] of Object.entries(pObj)){
-        if(v===0){
+        if(v===1){
             return k
         }
     }

@@ -32,7 +32,7 @@ function solution(tickets) {
       const to = copyObj[from].pop();
 
       result.push(to);
-      dfs({ ...copyObj }, to);
+      dfs(copyObj, to);
       result.pop();
       copyObj[from].unshift(to);
     }

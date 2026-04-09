@@ -1,25 +1,26 @@
+from collections import defaultdict
 def solution(id_list, report, k):
-    count = len(id_list)
-    result = [count*[0] for _ in range(count)]
-    s_count = [0]*count
-    answer = [0]*count
-    for i in report:
-        tmp = i.split(' ')
-        from_ = id_list.index(tmp[0])
-        to_ = id_list.index(tmp[1])
-        if(result[from_][to_]==1):continue
-        result[from_][to_] = 1
-        s_count[to_]+=1
-    
-    for i in range(count):
-        for j in range(len(s_count)):
-            # print(result[i][j])
-            # print(s_count[j])
-            # print(s_count[j]>=k and result[i][j]==1)
-            if(s_count[j]>=k and result[i][j]==1):
-                answer[i]+=1
+    report_count = defaultdict(int)
+    report_id = defaultdict(list)
+    report = list(set(report))
+    for r in report:
+        a = r.split(' ')[0]
+        b = r.split(' ')[1]
+        report_count[b] += 1
+        report_id[b].append(a)
         
-    # print(result)
-    # print(s_count)
-    # print(answer)
-    return answer
+    ids = {}
+    for i,id in enumerate(id_list):
+        ids[id] = {'index':i, 'count':0}
+        
+    for id,count in report_count.items():
+        if(count>=k):
+            for r in report_id[id]:
+                ids[r]['count'] += 1
+            
+    result = []
+    sorted_ids = sorted(ids.items(), key=lambda x: x[1]['index'])
+    for id in sorted_ids:
+        result.append(id[1]['count'])
+        
+    return result

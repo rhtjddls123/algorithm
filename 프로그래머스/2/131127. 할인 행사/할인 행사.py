@@ -1,18 +1,9 @@
 from collections import Counter
 def solution(want, number, discount):
-    k = 0
-    for n in number:
-        k+=n
-        
-    dict = {}
-    for i in range(len(number)):
-        dict[want[i]] = number[i]
-        
-    dLen = len(discount)
+    want_dict = dict(zip(want, number))
     count = 0
-    for i in range(dLen-k+1):
-        arr = discount[i:k+i]
-        if Counter(arr)==dict:
+    for i in range(len(discount)-9):
+        if Counter(discount[i:10+i])==want_dict:
             count += 1
         
     return count

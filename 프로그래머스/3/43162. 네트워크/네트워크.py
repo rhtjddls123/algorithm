@@ -1,15 +1,30 @@
+from collections import Counter
+
 def solution(n, computers):
-    visited = [False] * n
-    result = 0
+    network = [i for i in range(n)]
+    rank = [0]*n
     for i in range(n):
-        if visited[i]==False:
-            dfs(n, computers, visited, i)
-            result += 1
-    return result
+        for j in range(n):
+            if computers[i][j]==1:
+                union(network, rank, i, j)
+    for i in range(n):
+        find(network, i)
+    counter = Counter(network)
     
-def dfs(n, computers, visited, node):
-    visited[node] = True
-    for i in range(n):
-        if computers[i][node] == 1 and visited[i]==False:
-            dfs(n, computers, visited, i)
-        
+    return len(counter)
+
+def find(arr, x):
+    if arr[x] != x:
+        arr[x] = find(arr, arr[x])
+    return arr[x]
+
+def union(arr, rank, x, y):
+    nodeX = find(arr, x)
+    nodeY = find(arr, y)
+    if nodeX == nodeY: return
+
+    if rank[nodeX] < rank[nodeY]:
+        nodeX, nodeY = nodeY, nodeX
+    arr[nodeY] = nodeX
+    if rank[nodeX] == rank[nodeY]:
+        rank[nodeX] += 1

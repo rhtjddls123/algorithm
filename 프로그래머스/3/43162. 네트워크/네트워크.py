@@ -1,30 +1,24 @@
-from collections import Counter
+from collections import defaultdict
 
 def solution(n, computers):
-    network = [i for i in range(n)]
-    rank = [0]*n
+    visited = set()
+    tree = defaultdict(list)
     for i in range(n):
+        tree[i] = []
         for j in range(n):
-            if computers[i][j]==1:
-                union(network, rank, i, j)
-    for i in range(n):
-        find(network, i)
-    counter = Counter(network)
+            if i!=j and computers[i][j]==1:
+                tree[i].append(j)
     
-    return len(counter)
-
-def find(arr, x):
-    if arr[x] != x:
-        arr[x] = find(arr, arr[x])
-    return arr[x]
-
-def union(arr, rank, x, y):
-    nodeX = find(arr, x)
-    nodeY = find(arr, y)
-    if nodeX == nodeY: return
-
-    if rank[nodeX] < rank[nodeY]:
-        nodeX, nodeY = nodeY, nodeX
-    arr[nodeY] = nodeX
-    if rank[nodeX] == rank[nodeY]:
-        rank[nodeX] += 1
+    def dfs(node):
+        visited.add(node)
+        for i in tree[node]:
+            if i not in visited:
+                dfs(i)
+                
+    result = 0
+    for t in tree:
+        if t not in visited:
+            dfs(t)
+            result += 1
+                
+    return result

@@ -1,30 +1,22 @@
-from collections import deque
+import heapq
 
 def solution(board):
     n = len(board)
-    queue = deque([{'cur': [0,0], 'cost': 0, 'd': None}])
-    visited = [[{'v': float('inf'), 'h': float('inf')} for _ in range(n)] for _ in range(n)]
-    dir = [(0,1),(0,-1),(1,0),(-1,0)]
+    costs = [[{'v':float('inf'), 'h':float('inf')} for _ in range(n)] for _ in range(n)]
+    costs[0][0]['v'] = 0
+    costs[0][0]['h'] = 0
+    dir = [(1,0,'h'), (-1,0,'h'), (0,1,'v'), (0,-1,'v')]
+    queue = [(0, 0, 0, None)]
+    
     while queue:
-        q = queue.popleft()
-        for d in dir:
-            cur = [q['cur'][0] + d[0], q['cur'][1] + d[1]]
-            if (cur[0] >= n or cur[0] < 0 or cur[1] >= n or cur[1] < 0): continue
-
-            nextD = nextDir(q['cur'], cur)
-            cost = q['cost'] + 600 if isCorner(q['d'], nextD) else q['cost'] + 100
-
-            if (board[cur[0]][cur[1]] == 1): continue
-            if (visited[cur[0]][cur[1]][nextD] <= cost): continue
-            queue.append({ 'cur':cur, 'cost':cost, 'd': nextD })
-            visited[cur[0]][cur[1]][nextD] = cost
-    return min(visited[n - 1][n - 1]['v'], visited[n - 1][n - 1]['h'])
-
-def isCorner(d, nd):
-    if (d == "h" and nd == "v"): return True
-    if (d == "v" and nd == "h"): return True
-    return False
-
-def nextDir(prev, cur):
-    if (abs(prev[0] - cur[0]) == 1 and abs(prev[1] - cur[1]) == 0): return "v"
-    if (abs(prev[0] - cur[0]) == 0 and abs(prev[1] - cur[1]) == 1): return "h"
+        cur_cost, x, y, d = heapq.heappop(queue)
+        
+        for dx, dy, nd in dir:
+            nx, ny = x+dx, y+dy
+            if nx<0 or nx>=n or ny<0 or ny>=n or board[nx][ny]==1: continue
+            next_cost = cur_cost+600 if d and d!=nd else cur_cost + 100
+            if next_cost<costs[nx][ny][nd]:
+                costs[nx][ny][nd] = next_cost
+                heapq.heappush(queue, (next_cost, nx, ny, nd))
+                
+    return min(costs[n-1][n-1]['h'], costs[n-1][n-1]['v'])

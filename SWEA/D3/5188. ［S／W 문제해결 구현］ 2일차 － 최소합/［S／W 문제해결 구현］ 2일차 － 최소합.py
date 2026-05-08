@@ -49,9 +49,9 @@ for test_case in range(1, T + 1):
     cost = [[float('inf')] * N for _ in range(N)]
     dist = [[0,1],[0,-1],[1,0],[-1,0]]
     cost[0][0] = arr[0][0]
-    queue = [[0, 0, arr[0][0]]]
+    queue = [[arr[0][0], 0, 0]]
     while queue:
-        x, y, cur_cost = heapq.heappop(queue)
+        cur_cost, x, y = heapq.heappop(queue)
         for i in range(4):
             dx, dy = x+dist[i][0], y+dist[i][1]
             if dx<0 or dx>=N or dy<0 or dy>=N:
@@ -59,5 +59,5 @@ for test_case in range(1, T + 1):
             new_cost = cur_cost + arr[dx][dy]
             if new_cost<cost[dx][dy]:
                 cost[dx][dy] = new_cost
-                heapq.heappush(queue, [dx, dy, new_cost])
+                heapq.heappush(queue, [new_cost, dx, dy])
     print(f'#{test_case} {cost[N-1][N-1]}')

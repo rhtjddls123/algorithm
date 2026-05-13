@@ -46,16 +46,12 @@ for test_case in range(1, T + 1):
     mt = max(time)
     p_c = 0
     text = 'Possible'
-    for t in range(mt+1):
-        if t>=M and t%M == 0:
-            cnt += K
-
-        if time[p_c] == t:
-            if cnt <= 0:
-                text = 'Impossible'
-                break
-            p_c += 1
-            cnt -= 1
+    for t in time:
+        cnt = int(t / M) * K - p_c
+        if cnt<=0:
+            text = 'Impossible'
+            break
+        p_c += 1
 
 
     print(f'#{test_case} {text}')

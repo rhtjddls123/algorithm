@@ -41,9 +41,6 @@ T = int(input())
 for test_case in range(1, T + 1):
     N, M, K = map(int, input().split())
     time = sorted(list(map(int, input().split())))
-
-    cnt = 0
-    mt = max(time)
     p_c = 0
     text = 'Possible'
     for t in time:
@@ -52,6 +49,5 @@ for test_case in range(1, T + 1):
             text = 'Impossible'
             break
         p_c += 1
-
 
     print(f'#{test_case} {text}')

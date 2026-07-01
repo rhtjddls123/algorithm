@@ -16,9 +16,8 @@ class Solution
 
         for(int test_case = 1; test_case <= T; test_case++)
         {
-            String[] input = sc.nextLine().split(" ");
-            int a = Integer.parseInt(input[0]);
-            int b = Integer.parseInt(input[1]);
+            int a = sc.nextInt();
+            int b = sc.nextInt();
             int[] A = new int[a];
 
             for (int i = 0; i < a; i++) {
@@ -38,7 +37,7 @@ class Solution
             }
 
             int n = A.length;
-            int maxValue = 0;
+            int maxValue = Integer.MIN_VALUE;
 
             for(int i=0; i<=B.length-n; i+=1){
                 int tmp = 0;
@@ -49,7 +48,6 @@ class Solution
             }
 
             System.out.println("#"+test_case+" "+maxValue);
-            sc.nextLine();
         }
     }
 }

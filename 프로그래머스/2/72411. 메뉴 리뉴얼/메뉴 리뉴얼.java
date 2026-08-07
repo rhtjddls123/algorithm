@@ -1,55 +1,49 @@
 import java.util.*;
 
-public class Solution {
-
+class Solution {
     public String[] solution(String[] orders, int[] course) {
         List<String> list = new ArrayList<>();
         for (int i : course) {
             Map<String, Integer> map = new HashMap<>();
             for (String order : orders) {
-                String[] split = order.split("");
-                Arrays.sort(split);
-
-                combi(map, split, new boolean[split.length], 0, split.length, i);
+                char[] charArray = order.toCharArray();
+                Arrays.sort(charArray);
+                combi(charArray, new boolean[order.length()], 0, i, map);
             }
 
             Collection<Integer> values = map.values();
             int max = 0;
             for (Integer value : values) {
-                max = max < value ? value : max;
+                max = Math.max(max, value);
             }
 
-            if(max >= 2) {
-                for (Map.Entry<String, Integer> entry : map.entrySet()) {
-                    if(entry.getValue() == max) {
-                        list.add(entry.getKey());
-                    }
+            Set<Map.Entry<String, Integer>> entries = map.entrySet();
+            for (Map.Entry<String, Integer> entry : entries) {
+                if(entry.getValue()>=2 && entry.getValue()==max) {
+                    list.add(entry.getKey());
                 }
             }
         }
-        
-        String[] answer = new String[list.size()];
-        int idx = 0;
-        for (String s : list) {
-            answer[idx++] = s;
-        }
+        String[] answer = list.toArray(new String[0]);
         Arrays.sort(answer);
         return answer;
     }
-
-    public static void combi(Map<String, Integer> map, String[] order, boolean[] visited, int start, int n, int r) {
-        if (r == 0) {
+    
+    public static void combi(char[] chars, boolean[] visited, int start, int n, Map<String, Integer> map) {
+        if (n==0) {
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < n; i++) {
-                if (visited[i]) sb.append(order[i]);
+            for(int i=0; i< visited.length; i++) {
+                if (visited[i]) sb.append(chars[i]);
             }
-            String s = sb.toString();
-            map.put(s, map.getOrDefault(s, 0) + 1);
+            map.put(sb.toString(), map.getOrDefault(sb.toString(), 0) + 1);
+            return;
         }
 
-        for (int i = start; i < n; i++) {
+        if (chars.length - start < n) return;
+
+        for(int i=start; i<chars.length; i++) {
             visited[i] = true;
-            combi(map, order, visited, i + 1, n, r - 1);
+            combi(chars, visited, i+1, n-1, map);
             visited[i] = false;
         }
     }

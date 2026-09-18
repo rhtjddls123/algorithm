@@ -1,42 +1,45 @@
 import java.util.*;
 
 class Solution {
-    static int[] graph;
-
+    int[] graph;
+    
     public int solution(int n, int[][] costs) {
-        Arrays.sort(costs, (a,b)->Integer.compare(a[2], b[2]));
         graph = new int[n];
-        for (int i = 0; i < n; i++) {
+        
+        for(int i=0; i<n; i++) {
             graph[i] = i;
         }
+        
+        Arrays.sort(costs, (o1, o2)->Integer.compare(o1[2], o2[2]));
+        
         int answer = 0;
-
-        for (int[] cost : costs) {
-            if(union(cost[0], cost[1])) {
-                answer += cost[2];
+        for(int[] cost: costs) {
+            int x = cost[0];
+            int y = cost[1];
+            int c = cost[2];
+            
+            if (union(x, y)) {
+                answer += c;
             }
         }
-
+        
         return answer;
     }
-
-    public static int find(int x) {
+    
+    private int find(int x) {
         if (graph[x] != x) {
             graph[x] = find(graph[x]);
         }
-
         return graph[x];
     }
-
-    public static boolean union(int x, int y) {
+    
+    private boolean union(int x, int y) {
         int rootX = find(x);
         int rootY = find(y);
-
-        if (rootX != rootY) {
-            graph[rootY] = rootX;
-            return true;
-        }
-
-        return false;
+        
+        if (rootX == rootY) return false;
+        
+        graph[rootY] = rootX;
+        return true;
     }
 }
